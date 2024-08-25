@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { marked } from 'marked';
 
 const Message = ({ text, isUser, timestamp }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -55,6 +56,11 @@ const Message = ({ text, isUser, timestamp }) => {
         }
     };
 
+    const markdownToHtml = (text) => {
+        // Converte o texto Markdown para HTML
+        return marked.parse(text);
+    };
+
     return (
         <div
             className={`message p-2 mb-2 rounded-lg relative ${
@@ -103,7 +109,7 @@ const Message = ({ text, isUser, timestamp }) => {
             <div className="flex flex-col mb-2">
                 {/* Contém o texto da mensagem */}
                 {displayLines.map((line, i) => (
-                    <p key={i} className="m-0">{line}</p>
+                    <p key={i} className="m-0" dangerouslySetInnerHTML={{ __html: markdownToHtml(line) }} />
                 ))}
                 {/* Botão para expandir ou retrair a mensagem */}
                 {lines.length > MAX_LIMIT && (
@@ -135,14 +141,7 @@ export const ChatMessages = ({ messages, bottyping }) => {
                 </div>
             ))}
 
-            {bottyping && (
-                <div className="flex justify-start">
-                    <div
-                        className="message p-2 mb-2 rounded-lg bg-gray-200 text-gray-800 max-w-[60%] self-start py-2 px-3">
-                        <p>Digitando...</p>
-                    </div>
-                </div>
-            )}
+            {bottyping && <div className="text-gray-500 font-italic">Digitando...</div>}
         </div>
     );
 };
