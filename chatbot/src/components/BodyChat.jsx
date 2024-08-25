@@ -17,13 +17,13 @@ export const BodyChat = () => {
     const handleSendMessage = async () => {
         if (inputValue.trim() === "") return;
 
-        const now = new Date().toISOString(); // Obtém o horário atual
+        const now = new Date().toISOString();
 
         const userMessage = { text: inputValue, isUser: true, timestamp: now };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
         try {
-            const response = await fetch("http://localhost:3000/api/message", {
+            const response = await fetch("http://localhost:8080/api/chat/message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -50,14 +50,14 @@ export const BodyChat = () => {
         <div className="flex flex-col h-screen bg-gray-100">
             <div className="flex justify-between font-bold p-4 bg-white shadow-md cursor-default">
                 <h3 className={"text-black-800 text-2xl"}>
-                    ChatBot
+                    Chat AI 🤖
                 </h3>
                 <div className="flex items-center">
                     <p className="text-xs mr-4">
                         {startTime}
                     </p>
-                    <button className="p-1 hover:bg-gray-200 rounded-full" onClick={reloadPage}>
-                        <FontAwesomeIcon icon={faTrash} className="ext-gray-500 hover:text-purple-800 transition-colors duration-300 ease-in-out"/>
+                    <button className="p-1 hover:bg-gray-200 rounded-full" onClick={reloadPage} title={"Excluir chat"}>
+                        <FontAwesomeIcon  icon={faTrash} className="ext-gray-500 hover:text-purple-800 transition-colors duration-300 ease-in-out"/>
                     </button>
                 </div>
             </div>
@@ -77,6 +77,7 @@ export const BodyChat = () => {
                     }}
                 />
                 <button
+                    title={"Enviar"}
                     onClick={handleSendMessage}
                     style={{height: "50px"}}
                     className="ml-4 px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all duration-300"

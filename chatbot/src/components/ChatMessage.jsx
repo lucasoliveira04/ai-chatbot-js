@@ -55,15 +55,6 @@ const Message = ({ text, isUser, timestamp }) => {
         }
     };
 
-    const handleLanguageChange = (event) => {
-        const { name, value } = event.target;
-        if (name === 'sourceLang') {
-            setSourceLang(value);
-        } else if (name === 'targetLang') {
-            setTargetLang(value);
-        }
-    };
-
     return (
         <div
             className={`message p-2 mb-2 rounded-lg relative ${
@@ -116,7 +107,7 @@ const Message = ({ text, isUser, timestamp }) => {
                 ))}
                 {/* Botão para expandir ou retrair a mensagem */}
                 {lines.length > MAX_LIMIT && (
-                    <button onClick={handleToggle} className="text-blue-500 mt-2">
+                    <button onClick={handleToggle} className="text-blue-500 mt-2 opacity-80 hover: opacity-100">
                         {isExpanded ? 'Ver menos' : 'Ver mais'}
                     </button>
                 )}
