@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const inputField = document.querySelector('.barra-mensagem input[type="text"]');
     const sendButton = document.querySelector('.barra-mensagem button');
@@ -14,35 +13,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function getBotResponse(userMessage) {
         try {
-            const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
+            const response = await fetch("http://localhost:3000/api/message", {
+                method: 'POST',
                 headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + API_KEY
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [
-                        { role: "user", content: userMessage }
-                    ],
-                    max_tokens: 2048,
-                    temperature: 0.5
-                })
+                body: JSON.stringify({ message: userMessage })
             });
-
+    
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+    
             const data = await response.json();
-            return data.choices[0].message.content.trim();
+            return data.choices[0].message.content;
         } catch (error) {
             console.error('Error fetching bot response:', error);
-            throw error;
+            return 'Desculpe, algo deu errado. Tente novamente mais tarde.';
         }
     }
-
     sendButton.addEventListener('click', async () => {
         const userMessage = inputField.value.trim();
 
