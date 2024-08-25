@@ -125,7 +125,7 @@ const Message = ({ text, isUser, timestamp }) => {
     );
 };
 
-export const ChatMessages = ({ messages }) => {
+export const ChatMessages = ({ messages, bottyping }) => {
     return (
         <div className="flex-1 overflow-auto p-4 space-y-4">
             {/* Mapeia e exibe todas as mensagens */}
@@ -134,6 +134,15 @@ export const ChatMessages = ({ messages }) => {
                     <Message text={message.text} isUser={message.isUser} timestamp={message.timestamp} />
                 </div>
             ))}
+
+            {bottyping && (
+                <div className="flex justify-start">
+                    <div
+                        className="message p-2 mb-2 rounded-lg bg-gray-200 text-gray-800 max-w-[60%] self-start py-2 px-3">
+                        <p>Digitando...</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
