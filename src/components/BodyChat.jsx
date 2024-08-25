@@ -8,6 +8,7 @@ export const BodyChat = () => {
     const [inputValue, setInputValue] = useState("");
     const [messages, setMessages] = useState([]);
     const [startTime, setStartTime] = useState("");
+    const [botTyping, setBotTyping] = useState(false);
 
     useEffect(() => {
         const now = new Date().toLocaleString()
@@ -22,8 +23,10 @@ export const BodyChat = () => {
         const userMessage = { text: inputValue, isUser: true, timestamp: now };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
+        setBotTyping(true)
+
         try {
-            const response = await fetch("http://localhost:8080/api/chat/message", {
+            const response = await fetch("https://chatbot-api-fv3b.onrender.com/api/chat/message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,6 +40,9 @@ export const BodyChat = () => {
             setMessages((prevMessages) => [...prevMessages, botMessage]);
         } catch (error) {
             console.error("Erro ao enviar a mensagem:", error);
+        } finally {
+            setInputValue("")
+            setBotTyping(false)
         }
 
         setInputValue("");
@@ -63,6 +69,7 @@ export const BodyChat = () => {
             </div>
 
             <ChatMessages messages={messages}/>
+
             <div className="p-4 bg-white border-t border-gray-200 flex items-center">
                 <input
                     type="text"
@@ -84,6 +91,8 @@ export const BodyChat = () => {
                 >
                     <PaperAirplaneIcon className="w-5 h-5" />
                 </button>
+
+                {botTyping && <div className="text-gray-500 font-italic">{botTyping}</div>}
             </div>
         </div>
     );
