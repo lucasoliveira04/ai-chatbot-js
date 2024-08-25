@@ -3,6 +3,7 @@ import { ChatMessages } from "./ChatMessage.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {PaperAirplaneIcon} from "@heroicons/react/16/solid/index.js";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export const BodyChat = () => {
     const [inputValue, setInputValue] = useState("");
@@ -18,12 +19,16 @@ export const BodyChat = () => {
     const handleSendMessage = async () => {
         if (inputValue.trim() === "") return;
 
-        const now = new Date().toISOString();
+        const sanitizedMessage = inputValue
+            .replace(/'/g, ' ')
+            .replace(/"/g, ' ')
+            .replace(/[(){}[\]]/g, ' ')
 
+        const now = new Date().toISOString();
         const userMessage = { text: inputValue, isUser: true, timestamp: now };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        setBotTyping(true)
+        setBotTyping(true);
 
         try {
             const response = await fetch("https://chatbot-api-fv3b.onrender.com/api/chat/message", {
@@ -31,7 +36,7 @@ export const BodyChat = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ message: inputValue }),
+                body: JSON.stringify({ message: sanitizedMessage }),
             });
 
             const data = await response.json();
@@ -41,12 +46,11 @@ export const BodyChat = () => {
         } catch (error) {
             console.error("Erro ao enviar a mensagem:", error);
         } finally {
-            setInputValue("")
-            setBotTyping(false)
+            setInputValue("");
+            setBotTyping(false);
         }
-
-        setInputValue("");
     };
+
 
     const reloadPage = () => {
         window.location.reload()
@@ -91,8 +95,6 @@ export const BodyChat = () => {
                 >
                     <PaperAirplaneIcon className="w-5 h-5" />
                 </button>
-
-                {botTyping && <div className="text-gray-500 font-italic">{botTyping}</div>}
             </div>
         </div>
     );
