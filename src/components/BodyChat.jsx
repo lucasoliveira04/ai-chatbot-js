@@ -3,7 +3,6 @@ import { ChatMessages } from "./ChatMessage.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {PaperAirplaneIcon} from "@heroicons/react/16/solid/index.js";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 
 export const BodyChat = () => {
     const [inputValue, setInputValue] = useState("");
