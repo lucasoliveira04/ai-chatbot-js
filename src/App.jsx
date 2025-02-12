@@ -22,7 +22,7 @@ function AppContent(){
     return (
         <>
             <Helmet>
-                <title>{getPageTitle()} | ChatBot</title>
+                <title>{getPageTitle()}</title>
             </Helmet>
             <AppRouters/>
         </>

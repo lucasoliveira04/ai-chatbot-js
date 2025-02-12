@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { marked } from 'marked';
 
-const Message = ({ text, isUser, timestamp }) => {
+const Message = ({ text, isUser, timestamp, isDarkMode }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showCopyButton, setShowCopyButton] = useState(false);
@@ -12,7 +12,7 @@ const Message = ({ text, isUser, timestamp }) => {
     const [isTranslated, setIsTranslated] = useState(false);
     const [sourceLang, setSourceLang] = useState('EN');
     const [targetLang, setTargetLang] = useState('PT');
-    const apiKey = import.meta.env.VITE_API;
+    const apiKey = "43c3f2f4-5f60-4652-88d2-45cb2aa964af:fx"
 
     const MAX_LIMIT = 3;
     const lines = isTranslated ? translatedText.split('\n') : text.split('\n');
@@ -56,92 +56,57 @@ const Message = ({ text, isUser, timestamp }) => {
         }
     };
 
-    const markdownToHtml = (text) => {
-        // Converte o texto Markdown para HTML
-        return marked.parse(text);
-    };
+    const markdownToHtml = (text) => marked.parse(text);
 
     return (
         <div
             className={`message p-2 mb-2 rounded-lg relative ${
                 isUser
-                    ? 'bg-blue-500 text-white max-w-[80%] self-end py-3 px-4'
-                    : 'bg-gray-200 text-gray-800 max-w-[60%] self-start py-2 px-3'
-            }`}
+                    ? isDarkMode ? 'bg-blue-700 text-white' : 'bg-blue-500 text-white'
+                    : isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-800'
+            } max-w-[80%] py-3 px-4`}
             onMouseEnter={() => setShowCopyButton(true)}
             onMouseLeave={() => setShowCopyButton(false)}
         >
-            {/* Exibe o alerta se showAlert for verdadeiro */}
             {showAlert && (
-                <div className="absolute top-1 right-1 bg-green-100 text-green-800 p-2 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 z-10">
+                <div className="absolute top-1 right-1 bg-green-100 text-green-800 p-2 rounded-lg shadow-lg">
                     Mensagem copiada com sucesso
                 </div>
             )}
 
-            {/* Botões de copiar e traduzir */}
-            <div
-                className={`top-1 right-1 flex space-x-2 transition-opacity duration-300 ${
-                    showCopyButton ? 'opacity-100' : 'opacity-0'
-                }`}
-                style={{ zIndex: 1 }}
-            >
+            <div className={`top-1 right-1 flex space-x-2 transition-opacity duration-300 ${showCopyButton ? 'opacity-100' : 'opacity-0'}`}>
                 {!isUser && (
                     <>
-                        <button
-                            onClick={handleCopy}
-                            className="text-gray-600 hover:text-gray-800"
-                            aria-label="Copiar mensagem"
-                        >
-                            Copiar
-                        </button>
-                        <button
-                            onClick={handleTranslate}
-                            className="text-gray-600 hover:text-gray-800"
-                            aria-label="Traduzir mensagem"
-                        >
-                            Traduzir
-                        </button>
+                        <button onClick={handleCopy} className="text-gray-400 hover:text-gray-200">Copiar</button>
+                        <button onClick={handleTranslate} className="text-gray-400 hover:text-gray-200">Traduzir</button>
                     </>
                 )}
             </div>
 
-            {/* Bloco principal da mensagem */}
             <div className="flex flex-col mb-2">
-                {/* Contém o texto da mensagem */}
                 {displayLines.map((line, i) => (
                     <p key={i} className="m-0" dangerouslySetInnerHTML={{ __html: markdownToHtml(line) }} />
                 ))}
-                {/* Botão para expandir ou retrair a mensagem */}
                 {lines.length > MAX_LIMIT && (
-                    <button onClick={handleToggle} className="text-blue-500 mt-2 opacity-80 hover: opacity-100">
-                        {isExpanded ? 'Ver menos' : 'Ver mais'}
-                    </button>
+                    <button onClick={handleToggle} className="text-blue-400 mt-2">{isExpanded ? 'Ver menos' : 'Ver mais'}</button>
                 )}
             </div>
 
-            {/* Exibição do horário */}
-            <div
-                className={`bottom-1 ${
-                    isUser ? 'right-2 text-right text-white font-bold opacity-80 hover:opacity-100 cursor-default' : 'left-2 text-left text-black font-bold opacity-80 hover:opacity-100 cursor-default'
-                } text-xs mt-2`}
-            >
+            <div className={`bottom-1 text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-black'}`}>
                 {new Date(timestamp).toLocaleTimeString()}
             </div>
         </div>
     );
 };
 
-export const ChatMessages = ({ messages, bottyping }) => {
+export const ChatMessages = ({ messages, isDarkMode }) => {
     return (
-        <div className="flex-1 overflow-auto p-4 space-y-4">
-            {/* Mapeia e exibe todas as mensagens */}
+        <div className={`flex-1 overflow-auto p-4 space-y-4 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
             {messages.map((message, i) => (
                 <div key={i} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
-                    <Message text={message.text} isUser={message.isUser} timestamp={message.timestamp} />
+                    <Message text={message.text} isUser={message.isUser} timestamp={message.timestamp} isDarkMode={isDarkMode} />
                 </div>
             ))}
-
-            {bottyping && <div className="text-gray-500 font-italic">Digitando...</div>}
         </div>
     );
 };
