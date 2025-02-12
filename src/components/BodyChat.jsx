@@ -19,6 +19,8 @@ export const BodyChat = () => {
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme === "dark") {
             setIsDarkMode(true);
+        } else {
+            setIsDarkMode(false);
         }
     }, []);
 
@@ -55,6 +57,11 @@ export const BodyChat = () => {
     };
 
     const reloadPage = () => {
+        // Restaura o tema do localStorage antes de recarregar a página
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            setIsDarkMode(savedTheme === "dark");
+        }
         window.location.reload();
     };
 
@@ -76,7 +83,7 @@ export const BodyChat = () => {
                     {/* Botão para alternar tema */}
                     <button
                         className="p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
-                        onClick={() => setIsDarkMode(!isDarkMode)}
+                        onClick={toggleTheme}
                     >
                         {isDarkMode ? '🌙' : '☀️'}
                     </button>
@@ -118,6 +125,5 @@ export const BodyChat = () => {
                 </button>
             </div>
         </div>
-
     );
 };
