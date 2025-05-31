@@ -39,7 +39,7 @@ export const BodyChat = () => {
     setBotTyping(true);
 
     try {
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const apiKey = "AIzaSyDRLlXSk3iyV4cABLB43TI0sT7tmyjrbY8";
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
